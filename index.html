@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mfumo wa Bei ya Jumla - Powered by Malosha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #2E7D32;
+            --accent: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #1B5E20;
+            --gradient: linear-gradient(135deg, #4CAF50, #2E7D32);
+            --danger: #D32F2F;
+            --info: #0288D1;
+            --malosha-green: #4CAF50;
+            --malosha-blue: #0288D1;
+            --malosha-red: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scroll during loading */
+        }
+
+        /* Loading Screen */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: changeColor 10s linear infinite;
+        }
+
+        @keyframes changeColor {
+            0% { background: var(--malosha-green); }
+            33% { background: var(--malosha-blue); }
+            66% { background: var(--malosha-red); }
+            100% { background: var(--malosha-green); }
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite, pulse 2s infinite;
+        }
+
+        .welcome-message {
+            color: white;
+            font-size: 1.5rem;
+            margin-top: 1rem;
+            animation: fadeIn 1s ease-in-out;
+            text-align: center;
+        }
+
+        /* Moving Stars */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: moveStar 5s linear infinite;
+        }
+
+        .star:nth-child(1) { width: 2px; height: 2px; top: 10%; left: 20%; animation-delay: 0s; }
+        .star:nth-child(2) { width: 3px; height: 3px; top: 30%; left: 50%; animation-delay: 1s; }
+        .star:nth-child(3) { width: 1px; height: 1px; top: 50%; left: 70%; animation-delay: 2s; }
+        .star:nth-child(4) { width: 2px; height: 2px; top: 70%; left: 30%; animation-delay: 3s; }
+        .star:nth-child(5) { width: 3px; height: 3px; top: 20%; left: 80%; animation-delay: 4s; }
+
+        @keyframes moveStar {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Rainfall Animation */
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .drop {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            width: 2px;
+            height: 20px;
+            animation: fall 2s linear infinite;
+        }
+
+        .drop:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .drop:nth-child(2) { left: 20%; animation-delay: 0.2s; }
+        .drop:nth-child(3) { left: 30%; animation-delay: 0.4s; }
+        .drop:nth-child(4) { left: 40%; animation-delay: 0.6s; }
+        .drop:nth-child(5) { left: 50%; animation-delay: 0.8s; }
+        .drop:nth-child(6) { left: 60%; animation-delay: 1s; }
+        .drop:nth-child(7) { left: 70%; animation-delay: 1.2s; }
+        .drop:nth-child(8) { left: 80%; animation-delay: 1.4s; }
+        .drop:nth-child(9) { left: 90%; animation-delay: 1.6s; }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .content {
+            display: none;
+            animation: slideUp 0.5s ease-in;
+        }
+
+        .loaded .content {
+            display: block;
+        }
+
+        .loaded .loader {
+            display: none;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            padding: 1rem;
+            background: white;
+            overflow-y: auto;
+        }
+
+        h1 {
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slideIn 0.5s ease;
+        }
+
+        h3 {
+            color: var(--dark);
+            margin-top: 1.5rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--light);
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideIn 0.7s ease;
+        }
+
+        .price-table th, .price-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .price-table th {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .price-table tr:nth-child(even) {
+            background-color: #E8F5E9;
+        }
+
+        .price-table tr:hover {
+            background-color: #DCE775;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            animation: slideIn 0.5s ease;
+            animation-delay: calc(var(--order) * 0.1s);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input[type="number"], input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #f9f9f9;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        button {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin: 0.5rem 0;
+            position: relative;
+            overflow: hidden;
+            animation: bounceIn 0.5s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2E7D32, #1B5E20);
+            transform: translateY(-2px);
+        }
+
+        button:active::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: ripple 0.6s linear;
+        }
+
+        @keyframes ripple {
+            to { width: 200px; height: 200px; opacity: 0; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .delete-btn, .remove-btn, .edit-btn {
+            background: var(--danger);
+            width: auto;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover, .remove-btn:hover, .edit-btn:hover {
+            background: #B71C1C;
+        }
+
+        .edit-btn {
+            background: var(--info);
+        }
+
+        .edit-btn:hover {
+            background: #01579B;
+        }
+
+        .export-btn, .wholesale-btn {
+            background: var(--info);
+        }
+
+        .export-btn:hover, .wholesale-btn:hover {
+            background: #01579B;
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #E8F5E9;
+            border-radius: 10px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .result h2 {
+            color: var(--dark);
+            margin-top: 0;
+        }
+
+        .package, .debtor {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed #BDBDBD;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--primary);
+        }
+
+        .remaining {
+            color: var(--danger);
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .revenue {
+            color: var(--info);
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .profit {
+            color: var(--secondary);
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .loss {
+            color: var(--danger);
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .average-cost {
+            color: #7B1FA2;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .history, .debtors-list {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #E0F7FA;
+            border-radius: 10px;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .history h2, .debtors-list h2 {
+            color: var(--dark);
+            margin-top: 0;
+        }
+
+        .history-item, .debtor-item {
+            border-bottom: 1px solid #BDBDBD;
+            padding: 1rem;
+            position: relative;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        .debtor-item .remove-btn, .debtor-item .edit-btn {
+            position: static;
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+            display: inline-flex;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            cursor: pointer;
+            font-size: 2rem;
+            color: var(--dark);
+            background: var(--light);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient);
+            color: white;
+            padding: 4rem 2rem;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 1.5rem;
+            font-size: 1.4rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            animation: slideIn 0.5s ease;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(10px);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Powered by Malosha Logo */
+        .powered-by {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--malosha-green);
+            animation: pulse 2s infinite, colorChange 9s infinite;
+        }
+
+        @keyframes colorChange {
+            0% { color: var(--malosha-green); }
+            33% { color: var(--malosha-blue); }
+            66% { color: var(--malosha-red); }
+            100% { color: var(--malosha-green); }
+        }
+
+        .powered-by:hover {
+            transform: scale(1.1);
+        }
+
+        /* Graph Styles */
+        canvas {
+            max-width: 100%;
+            margin: 1rem 0;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+
+            .nav-menu {
+                width: 300px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .form-group label {
+                font-size: 1.1rem;
+            }
+
+            input[type="number"], input[type="text"], input[type="date"] {
+                font-size: 1.1rem;
+            }
+
+            button {
+                font-size: 1.1rem;
+                padding: 14px 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .nav-menu a {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            .price-table th, .price-table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+            }
+
+            input[type="number"], input[type="text"], input[type="date"] {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            button {
+                font-size: 0.9rem;
+                padding: 10px 16px;
+            }
+
+            .welcome-message {
+                font-size: 1.2rem;
+            }
+
+            .powered-by {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="stars">
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+            <div class="star"></div>
+        </div>
+        <div class="rain">
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+            <div class="drop"></div>
+        </div>
+        <div class="loader-spinner"></div>
+        <div class="welcome-message">Karibu kwenye Mfumo wa Bei ya Jumla - Powered by Malosha!</div>
+    </div>
+    <div class="content">
+        <div class="hamburger"><i class="fas fa-bars"></i></div>
+        <div class="nav-menu">
+            <div class="close-menu"><i class="fas fa-times"></i></div>
+            <a href="#" onclick="showSection('buy-section')"><i class="fas fa-shopping-cart"></i> Nunua Bei ya Jumla</a>
+            <a href="#" onclick="showSection('sell-section')"><i class="fas fa-money-bill-wave"></i> Hesabu Mapato na Faida</a>
+            <a href="#" onclick="showSection('round-section')"><i class="fas fa-sync-alt"></i> Round</a>
+            <a href="#" onclick="showSection('debtors-section')"><i class="fas fa-users"></i> Wanadaiwa</a>
+        </div>
+
+        <div class="container">
+            <h1>Mfumo wa Bei ya Jumla</h1>
+            
+            <div id="buy-section" class="section active">
+                <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>Bei (TSh)</th>
+                            <th>Idadi ya Vipande</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>100</td>
+                            <td>Kipande 1</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Vipande 6</td>
+                        </tr>
+                        <tr>
+                            <td>1,000</td>
+                            <td>Vipande 14</td>
+                        </tr>
+                        <tr>
+                            <td>2,000</td>
+                            <td>Vipande 28</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="form-group" style="--order: 1">
+                    <label for="amount">Weka kiasi cha pesa yako (TSh):</label>
+                    <input type="number" id="amount" min="100" step="100" placeholder="Ingiza kiasi kwa shilingi">
+                </div>
+                
+                <button onclick="calculatePackages()"><i class="fas fa-calculator"></i> Hesabu Vipande</button>
+                
+                <div id="buy-result" class="result">
+                    <h2>Matokeo:</h2>
+                    <div id="buy-packages"></div>
+                    <div id="buy-total" class="total"></div>
+                    <div id="buy-remaining" class="remaining"></div>
+                    <div id="buy-profit" class="profit"></div>
+                </div>
+            </div>
+            
+            <div id="sell-section" class="section">
+                 <table class="price-table">
+                    <thead>
+                        <tr>
+                            <th>Bei (TSh)</th>
+                            <th>Idadi ya Vipande</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>100</td>
+                            <td>Kipande 1</td>
+                        </tr>
+                        <tr>
+                            <td>500</td>
+                            <td>Vipande 6</td>
+                        </tr>
+                        <tr>
+                            <td>1,000</td>
+                            <td>Vipande 14</td>
+                        </tr>
+                        <tr>
+                            <td>2,000</td>
+                            <td>Vipande 28</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2>Gharama za Mahitaji</h2>
+                <div class="form-group" style="--order: 1">
+                    <label for="sugar">Kiasi cha Sukari (kilo):</label>
+                    <input type="number" id="sugar" min="0" step="0.1" placeholder="Ingiza kilo za sukari">
+                </div>
+                <div class="form-group" style="--order: 2">
+                    <label for="charcoal">Gharama ya Mkaa (TSh):</label>
+                    <input type="number" id="charcoal" min="0" step="100" placeholder="Ingiza gharama ya mkaa">
+                </div>
+                <div class="form-group" style="--order: 3">
+                    <label for="oil">Kiasi cha Ufuta (kilo):</label>
+                    <input type="number" id="oil" min="0" step="0.1" placeholder="Ingiza kilo za ufuta">
+                </div>
+                
+                <h2>Vipande Vilivyotengenezwa</h2>
+                <div class="form-group" style="--order: 4">
+                    <label for="pieces">Jumla ya vipande ulivyotengeneza:</label>
+                    <input type="number" id="pieces" min="1" step="1" placeholder="Ingiza idadi ya vipande">
+                </div>
+                
+                <button onclick="calculateRevenue()"><i class="fas fa-calculator"></i> Hesabu Mapato na Faida</button>
+                <button onclick="toggleHistory('sell')"><i class="fas fa-history"></i> Onyesha/Ficha Historia</button>
+                <button class="export-btn" onclick="exportHistory('sell')"><i class="fas fa-download"></i> Pakua Historia (CSV)</button>
+                <div class="form-group">
+                    <label for="history-filter-sell">Chuja kwa Siku:</label>
+                    <input type="date" id="history-filter-sell" onchange="filterHistory('sell')">
+                </div>
+                
+                <div id="sell-result" class="result">
+                    <h2>Matokeo:</h2>
+                    <h3>Gharama za Mahitaji:</h3>
+                    <div id="sell-costs"></div>
+                    <div id="sell-total-cost" class="total"></div>
+                    <div id="sell-average-cost" class="average-cost"></div>
+                    <h3>Mapato na Faida:</h3>
+                    <div id="sell-retail-value" class="revenue"></div>
+                    <div id="sell-wholesale-packages"></div>
+                    <div id="sell-wholesale-revenue" class="revenue"></div>
+                    <div id="sell-retail-profit" class="profit"></div>
+                    <div id="sell-wholesale-profit" class="profit"></div>
+                </div>
+                
+                <div id="sell-history" class="history">
+                    <h2>Historia ya Mahesabu</h2>
+                    <div id="sell-history-items"></div>
+                </div>
+            </div>
+            
+            <div id="round-section" class="section">
+                <h2>Round</h2>
+                <div class="form-group" style="--order: 1">
+                    <label for="round-pieces">Idadi ya Vipande kwa Round:</label>
+                    <input type="number" id="round-pieces" min="1" step="1" placeholder="Ingiza idadi ya vipande">
+                </div>
+                
+                <button onclick="addRound()"><i class="fas fa-plus-circle"></i> Ongeza Round</button>
+                <button onclick="savePhase()"><i class="fas fa-save"></i> Hifadhi Awamu</button>
+                <button onclick="toggleHistory('round')"><i class="fas fa-history"></i> Onyesha/Ficha Historia</button>
+                <button class="export-btn" onclick="exportHistory('round')"><i class="fas fa-download"></i> Pakua Historia (CSV)</button>
+                <div class="form-group">
+                    <label for="history-filter-round">Chuja kwa Siku:</label>
+                    <input type="date" id="history-filter-round" onchange="filterHistory('round')">
+                </div>
+                
+                <div id="round-result" class="result">
+                    <h2>Rounds za Awamu:</h2>
+                    <div id="round-details"></div>
+                    <div id="round-total-pieces" class="total"></div>
+                    <div id="round-total-value" class="revenue"></div>
+                </div>
+                
+                <div id="round-history" class="history">
+                    <h2>Historia ya Awamu</h2>
+                    <div id="round-history-items"></div>
+                    <canvas id="profit-chart"></canvas>
+                </div>
+            </div>
+            
+            <div id="debtors-section" class="section">
+                <h2>Wanadaiwa</h2>
+                <div class="form-group" style="--order: 1">
+                    <label for="debtor-name">Jina la Mdaiwa:</label>
+                    <input type="text" id="debtor-name" placeholder="Ingiza jina la mdaiwa">
+                </div>
+                <div class="form-group" style="--order: 2">
+                    <label for="debtor-amount">Kiasi (TSh):</label>
+                    <input type="number" id="debtor-amount" min="1" step="1" placeholder="Ingiza kiasi">
+                </div>
+                
+                <button onclick="addDebtor()"><i class="fas fa-user-plus"></i> Ongeza Mdaiwa</button>
+                <button onclick="toggleDebtorsList()"><i class="fas fa-list-ul"></i> Onyesha/Ficha Wanadaiwa</button>
+                <button class="export-btn" onclick="exportDebtors()"><i class="fas fa-download"></i> Pakua Wanadaiwa (CSV)</button>
+                
+                <div id="debtors-list" class="debtors-list">
+                    <h2>Orodha ya Wanadaiwa</h2>
+                    <div id="debtors-items"></div>
+                </div>
+            </div>
+
+            <div class="powered-by">Powered by Malosha</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Show loader for 10 seconds
+        document.body.classList.add('loaded');
+        setTimeout(() => {
+            document.body.style.overflow = 'auto'; // Restore scroll after loading
+        }, 10000); // 10 seconds
+
+        // Current rounds for the phase
+        let currentRounds = [];
+
+        // Hamburger Menu Toggle
+        document.querySelector('.hamburger').addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.add('active');
+        });
+
+        document.querySelector('.close-menu').addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.remove('active');
+        });
+
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.querySelector('.nav-menu').classList.remove('active');
+            });
+        });
+
+        // Show specific section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Function to calculate buying packages
+        function calculatePackages() {
+            const amount = parseInt(document.getElementById('amount').value);
+            
+            if (isNaN(amount) || amount < 100) {
+                alert("Tafadhali ingiza kiasi cha pesa kisichopungua TSh 100");
+                return;
+            }
+            
+            const packages = [
+                { value: 2000, pieces: 28 },
+                { value: 1000, pieces: 14 },
+                { value: 500, pieces: 6 },
+                { value: 100, pieces: 1 }
+            ];
+            
+            let remainingAmount = amount;
+            let totalPieces = 0;
+            let outputHTML = '';
+            
+            packages.forEach(pkg => {
+                const count = Math.floor(remainingAmount / pkg.value);
+                if (count > 0) {
+                    const pieces = count * pkg.pieces;
+                    totalPieces += pieces;
+                    outputHTML += `
+                        <div class="package">
+                            <span>${count} × pakiti ya TSh ${pkg.value.toLocaleString()}</span>
+                            <span>Vipande ${pieces}</span>
+                        </div>
+                    `;
+                    remainingAmount = remainingAmount % pkg.value;
+                }
+            });
+            
+            const retailPricePerPiece = 100;
+            const retailValue = totalPieces * retailPricePerPiece;
+            const profit = retailValue - (amount - remainingAmount);
+            
+            document.getElementById('buy-packages').innerHTML = outputHTML;
+            document.getElementById('buy-total').textContent = `Jumla ya vipande: ${totalPieces}`;
+            document.getElementById('buy-profit').textContent = `Faida inayotarajiwa: TSh ${profit.toLocaleString()}`;
+            
+            const remainingElement = document.getElementById('buy-remaining');
+            if (remainingAmount > 0) {
+                remainingElement.textContent = `Pesa iliyobaki: TSh ${remainingAmount.toLocaleString()}`;
+                remainingElement.style.display = 'block';
+            } else {
+                remainingElement.style.display = 'none';
+            }
+            
+            document.getElementById('buy-result').style.display = 'block';
+        }
+
+        // Function to calculate revenue and profit from selling
+        function calculateRevenue() {
+            const sugar = parseFloat(document.getElementById('sugar').value) || 0;
+            const charcoal = parseInt(document.getElementById('charcoal').value) || 0;
+            const oil = parseFloat(document.getElementById('oil').value) || 0;
+            const totalPieces = parseInt(document.getElementById('pieces').value);
+            
+            if (sugar < 0 || charcoal < 0 || oil < 0) {
+                alert("Tafadhali ingiza gharama zisizo chini ya sifuri.");
+                return;
+            }
+            if (isNaN(totalPieces) || totalPieces < 1) {
+                alert("Tafadhali ingiza idadi ya vipande isiyopungua 1.");
+                return;
+            }
+            if (!sugar && !charcoal && !oil) {
+                alert("Tafadhali ingiza angalau gharama moja (sukari, mkaa, au ufuta).");
+                return;
+            }
+            
+            const sugarCost = sugar * 2600;
+            const oilCost = oil * 5000;
+            const totalCost = sugarCost + charcoal + oilCost;
+            const averageCostPerPiece = totalPieces > 0 ? (totalCost / totalPieces).toFixed(2) : 0;
+            
+            const packages = [
+                { value: 2000, pieces: 28 },
+                { value: 1000, pieces: 14 },
+                { value: 500, pieces: 6 },
+                { value: 100, pieces: 1 }
+            ];
+            
+            let remainingPieces = totalPieces;
+            let totalWholesaleRevenue = 0;
+            let wholesaleOutputHTML = '';
+            
+            packages.forEach(pkg => {
+                const count = Math.floor(remainingPieces / pkg.pieces);
+                if (count > 0) {
+                    const pieces = count * pkg.pieces;
+                    const revenue = count * pkg.value;
+                    totalWholesaleRevenue += revenue;
+                    wholesaleOutputHTML += `
+                        <div class="package">
+                            <span>${count} × pakiti ya TSh ${pkg.value.toLocaleString()}</span>
+                            <span>Vipande ${pieces}</span>
+                        </div>
+                    `;
+                    remainingPieces -= pieces;
+                }
+            });
+            
+            if (remainingPieces > 0) {
+                const revenue = remainingPieces * 100;
+                totalWholesaleRevenue += revenue;
+                wholesaleOutputHTML += `
+                    <div class="package">
+                        <span>${remainingPieces} × pakiti ya TSh 100</span>
+                        <span>Vipande ${remainingPieces}</span>
+                    </div>
+                `;
+            }
+            
+            const retailPricePerPiece = 100;
+            const retailValue = totalPieces * retailPricePerPiece;
+            const retailProfit = retailValue - totalCost;
+            const wholesaleProfit = totalWholesaleRevenue - totalCost;
+            
+            let costOutputHTML = '';
+            if (sugar > 0) {
+                costOutputHTML += `<div class="package"><span>Sukari (${sugar} kg × TSh 2,600):</span><span>TSh ${sugarCost.toLocaleString()}</span></div>`;
+            }
+            if (charcoal > 0) {
+                costOutputHTML += `<div class="package"><span>Mkaa:</span><span>TSh ${charcoal.toLocaleString()}</span></div>`;
+            }
+            if (oil > 0) {
+                costOutputHTML += `<div class="package"><span>Ufuta (${oil} kg × TSh 5,000):</span><span>TSh ${oilCost.toLocaleString()}</span></div>`;
+            }
+            if (!sugar && !charcoal && !oil) {
+                costOutputHTML = `<div>Hakuna gharama zilizowekwa.</div>`;
+            }
+            
+            document.getElementById('sell-costs').innerHTML = costOutputHTML;
+            document.getElementById('sell-total-cost').textContent = `Jumla ya gharama za mahitaji: TSh ${totalCost.toLocaleString()}`;
+            document.getElementById('sell-average-cost').textContent = `Gharama ya wastani kwa kipande: TSh ${averageCostPerPiece}`;
+            document.getElementById('sell-retail-value').textContent = `Thamani ya rejareja (${totalPieces} × TSh 100): TSh ${retailValue.toLocaleString()}`;
+            document.getElementById('sell-wholesale-packages').innerHTML = wholesaleOutputHTML;
+            document.getElementById('sell-wholesale-revenue').textContent = `Mapato ya bei ya jumla: TSh ${totalWholesaleRevenue.toLocaleString()}`;
+            document.getElementById('sell-retail-profit').textContent = `Faida ya rejareja: TSh ${retailProfit.toLocaleString()}`;
+            document.getElementById('sell-wholesale-profit').textContent = `Faida ya bei ya jumla: TSh ${wholesaleProfit.toLocaleString()}`;
+            
+            document.getElementById('sell-result').style.display = 'block';
+            
+            let history = JSON.parse(localStorage.getItem('sellHistory')) || [];
+            history.push({
+                timestamp: new Date().toLocaleString(),
+                sugar: sugar,
+                sugarCost: sugarCost,
+                charcoal: charcoal,
+                oil: oil,
+                oilCost: oilCost,
+                totalCost: totalCost,
+                averageCostPerPiece: averageCostPerPiece,
+                totalPieces: totalPieces,
+                retailValue: retailValue,
+                wholesaleRevenue: totalWholesaleRevenue,
+                retailProfit: retailProfit,
+                wholesaleProfit: wholesaleProfit,
+                wholesalePackages: wholesaleOutputHTML
+            });
+            localStorage.setItem('sellHistory', JSON.stringify(history));
+            
+            document.getElementById('sugar').value = '';
+            document.getElementById('charcoal').value = '';
+            document.getElementById('oil').value = '';
+            document.getElementById('pieces').value = '';
+        }
+
+        // Function to add a round
+        function addRound() {
+            const piecesPerRound = parseInt(document.getElementById('round-pieces').value);
+            
+            if (isNaN(piecesPerRound) || piecesPerRound < 1) {
+                alert("Tafadhali ingiza idadi ya vipande isiyopungua 1.");
+                return;
+            }
+            
+            const totalPieces = piecesPerRound * 2;
+            const totalValue = totalPieces * 100;
+            
+            currentRounds = currentRounds || [];
+            currentRounds.push({
+                piecesPerRound: piecesPerRound,
+                totalPieces: totalPieces,
+                totalValue: totalValue
+            });
+            
+            updateRoundDisplay();
+            
+            document.getElementById('round-pieces').value = '';
+            alert("Round imeongezwa!");
+        }
+
+        // Function to update round display
+        function updateRoundDisplay() {
+            let outputHTML = '';
+            let totalPieces = 0;
+            let totalValue = 0;
+            
+            (currentRounds || []).forEach((round, index) => {
+                outputHTML += `
+                    <div class="package">
+                        <span>Round ${index + 1}: ${round.piecesPerRound} × 2:</span>
+                        <span>Vipande ${round.totalPieces} (TSh ${round.totalValue.toLocaleString()})</span>
+                    </div>
+                `;
+                totalPieces += round.totalPieces;
+                totalValue += round.totalValue;
+            });
+            
+            document.getElementById('round-details').innerHTML = outputHTML;
+            document.getElementById('round-total-pieces').textContent = `Jumla ya vipande: ${totalPieces}`;
+            document.getElementById('round-total-value').textContent = `Jumla ya thamani: TSh ${totalValue.toLocaleString()}`;
+            
+            document.getElementById('round-result').style.display = 'block';
+        }
+
+        // Function to save phase
+        function savePhase() {
+            if (!currentRounds || currentRounds.length === 0) {
+                alert("Tafadhali ongeza angalau round moja kabla ya kuhifadhi awamu.");
+                return;
+            }
+            
+            const today = new Date().toISOString().split('T')[0];
+            let dailyHistory = JSON.parse(localStorage.getItem('roundDailyHistory')) || {};
+            
+            if (!dailyHistory[today]) {
+                dailyHistory[today] = {
+                    date: today,
+                    phases: []
+                };
+            }
+            
+            if (!dailyHistory[today].phases) {
+                dailyHistory[today].phases = [];
+            }
+            
+            const phase = {
+                timestamp: new Date().toLocaleString(),
+                rounds: [...currentRounds],
+                totalPieces: (currentRounds || []).reduce((sum, round) => sum + (round.totalPieces || 0), 0),
+                totalValue: (currentRounds || []).reduce((sum, round) => sum + (round.totalValue || 0), 0)
+            };
+            
+            dailyHistory[today].phases.push(phase);
+            localStorage.setItem('roundDailyHistory', JSON.stringify(dailyHistory));
+            
+            currentRounds = [];
+            document.getElementById('round-details').innerHTML = '';
+            document.getElementById('round-total-pieces').textContent = '';
+            document.getElementById('round-total-value').textContent = '';
+            document.getElementById('round-result').style.display = 'none';
+            
+            alert("Awamu imehifadhiwa!");
+        }
+
+        // Function to calculate wholesale profit and loss
+        function calculateWholesaleMetrics(totalPieces) {
+            const packages = [
+                { value: 2000, pieces: 28 },
+                { value: 1000, pieces: 14 },
+                { value: 500, pieces: 6 },
+                { value: 100, pieces: 1 }
+            ];
+            
+            let remainingPieces = totalPieces;
+            let wholesaleRevenue = 0;
+            let wholesalePackages = '';
+            
+            packages.forEach(pkg => {
+                const count = Math.floor(remainingPieces / pkg.pieces);
+                if (count > 0) {
+                    const pieces = count * pkg.pieces;
+                    const revenue = count * pkg.value;
+                    wholesaleRevenue += revenue;
+                    wholesalePackages += `
+                        <div class="package">
+                            <span>${count} × pakiti ya TSh ${pkg.value.toLocaleString()}</span>
+                            <span>Vipande ${pieces}</span>
+                        </div>
+                    `;
+                    remainingPieces -= pieces;
+                }
+            });
+            
+            if (remainingPieces > 0) {
+                const revenue = remainingPieces * 100;
+                wholesaleRevenue += revenue;
+                wholesalePackages += `
+                    <div class="package">
+                        <span>${remainingPieces} × pakiti ya TSh 100</span>
+                        <span>Vipande ${remainingPieces}</span>
+                    </div>
+                `;
+            }
+            
+            const retailValue = totalPieces * 100;
+            const wholesaleProfit = wholesaleRevenue;
+            const customerProfit = retailValue - wholesaleRevenue;
+            const loss = retailValue - wholesaleRevenue; // Loss compared to retail
+            
+            return {
+                wholesaleRevenue,
+                wholesaleProfit,
+                customerProfit,
+                loss,
+                wholesalePackages
+            };
+        }
+
+        // Function to add a debtor
+        function addDebtor() {
+            const name = document.getElementById('debtor-name').value.trim();
+            const amount = parseInt(document.getElementById('debtor-amount').value);
+            
+            if (!name) {
+                alert("Tafadhali ingiza jina la mdaiwa.");
+                return;
+            }
+            if (isNaN(amount) || amount < 1) {
+                alert("Tafadhali ingiza kiasi kisichopungua TSh 1.");
+                return;
+            }
+            
+            let debtors = JSON.parse(localStorage.getItem('debtors')) || [];
+            debtors.push({
+                name: name,
+                amount: amount,
+                timestamp: new Date().toLocaleString()
+            });
+            localStorage.setItem('debtors', JSON.stringify(debtors));
+            
+            document.getElementById('debtor-name').value = '';
+            document.getElementById('debtor-amount').value = '';
+            
+            alert("Mdaiwa ameongezwa!");
+            toggleDebtorsList();
+        }
+
+        // Function to edit debtor
+        function editDebtor(index) {
+            const debtors = JSON.parse(localStorage.getItem('debtors')) || [];
+            const debtor = debtors[index];
+            const newAmount = prompt(`Ingiza kiasi kipya kwa ${debtor.name} (TSh):`, debtor.amount);
+            
+            if (newAmount !== null && !isNaN(newAmount) && newAmount >= 1) {
+                debtors[index].amount = parseInt(newAmount);
+                debtors[index].timestamp = new Date().toLocaleString();
+                localStorage.setItem('debtors', JSON.stringify(debtors));
+                alert("Kiasi kimehaririwa!");
+                toggleDebtorsList();
+            } else if (newAmount !== null) {
+                alert("Tafadhali ingiza kiasi kisichopungua TSh 1.");
+            }
+        }
+
+        // Function to toggle debtors list
+        function toggleDebtorsList() {
+            const debtorsList = document.getElementById('debtors-list');
+            const isVisible = debtorsList.style.display === 'block';
+            debtorsList.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                const debtors = JSON.parse(localStorage.getItem('debtors')) || [];
+                const debtorsItems = document.getElementById('debtors-items');
+                
+                if (debtors.length === 0) {
+                    debtorsItems.innerHTML = '<div>Hakuna wanadaiwa waliorekodiwa.</div>';
+                } else {
+                    let outputHTML = '';
+                    debtors.forEach((debtor, index) => {
+                        outputHTML += `
+                            <div class="debtor-item">
+                                <div class="debtor">
+                                    <span>Jina: ${debtor.name}</span>
+                                    <span>Kiasi: TSh ${debtor.amount.toLocaleString()}</span>
+                                </div>
+                                <div>Saa: ${debtor.timestamp}</div>
+                                <button class="edit-btn" onclick="editDebtor(${index})"><i class="fas fa-edit"></i> Hariri</button>
+                                <button class="remove-btn" onclick="removeDebtor(${index})"><i class="fas fa-trash-alt"></i> Ondoa</button>
+                            </div>
+                        `;
+                    });
+                    debtorsItems.innerHTML = outputHTML;
+                }
+            }
+        }
+
+        // Function to remove debtor
+        function removeDebtor(index) {
+            if (confirm('Je, una uhakika unataka kuondoa mdaiwa huyu?')) {
+                let debtors = JSON.parse(localStorage.getItem('debtors')) || [];
+                debtors.splice(index, 1);
+                localStorage.setItem('debtors', JSON.stringify(debtors));
+                alert("Mdaiwa ameondolewa!");
+                toggleDebtorsList();
+            }
+        }
+
+        // Function to draw profit chart
+        let profitChart = null;
+        function drawProfitChart(totalPieces, retailValue, wholesaleProfit, loss) {
+            const ctx = document.getElementById('profit-chart').getContext('2d');
+            
+            if (profitChart) {
+                profitChart.destroy();
+            }
+            
+            profitChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jumla Vipande', 'Thamani Rejareja', 'Faida Bei ya Jumla', 'Hasara Bei ya Jumla'],
+                    datasets: [{
+                        label: 'Maadili ya Biashara (TSh)',
+                        data: [totalPieces, retailValue, wholesaleProfit, loss],
+                        backgroundColor: [
+                            'rgba(76, 175, 80, 0.5)',
+                            'rgba(2, 136, 209, 0.5)',
+                            'rgba(46, 125, 50, 0.5)',
+                            'rgba(211, 47, 47, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(76, 175, 80, 1)',
+                            'rgba(2, 136, 209, 1)',
+                            'rgba(46, 125, 50, 1)',
+                            'rgba(211, 47, 47, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Thamani (TSh)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Uhusiano wa Biashara kwa Siku'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to filter history
+        function filterHistory(section) {
+            const filterDate = document.getElementById(`history-filter-${section}`).value;
+            const historyDiv = document.getElementById(`${section}-history`);
+            historyDiv.style.display = 'block';
+            
+            if (section === 'sell') {
+                const history = JSON.parse(localStorage.getItem('sellHistory')) || [];
+                const historyItems = document.getElementById('sell-history-items');
+                
+                const filteredHistory = filterDate ? 
+                    history.filter(item => item.timestamp.includes(filterDate.replace(/-/g, '/').slice(0, 10))) : 
+                    history;
+                
+                if (filteredHistory.length === 0) {
+                    historyItems.innerHTML = '<div>Hakuna historia kwa siku hii.</div>';
+                } else {
+                    let outputHTML = '';
+                    filteredHistory.forEach((item, index) => {
+                        outputHTML += `
+                            <div class="history-item">
+                                <button class="delete-btn" onclick="deleteHistoryItem(${index}, 'sell')"><i class="fas fa-trash-alt"></i> Futa</button>
+                                <strong>Tarehe: ${item.timestamp}</strong>
+                                <h3>Gharama za Mahitaji:</h3>
+                                ${item.sugar > 0 ? `<div class="package"><span>Sukari (${item.sugar} kg × TSh 2,600):</span><span>TSh ${item.sugarCost.toLocaleString()}</span></div>` : ''}
+                                ${item.charcoal > 0 ? `<div class="package"><span>Mkaa:</span><span>TSh ${item.charcoal.toLocaleString()}</span></div>` : ''}
+                                ${item.oil > 0 ? `<div class="package"><span>Ufuta (${item.oil} kg × TSh 5,000):</span><span>TSh ${item.oilCost.toLocaleString()}</span></div>` : ''}
+                                <div class="total">Jumla ya gharama za mahitaji: TSh ${item.totalCost.toLocaleString()}</div>
+                                <div class="average-cost">Gharama ya wastani kwa kipande: TSh ${item.averageCostPerPiece}</div>
+                                <h3>Mapato na Faida:</h3>
+                                <div class="revenue">Thamani ya rejareja (${item.totalPieces} × TSh 100): TSh ${item.retailValue.toLocaleString()}</div>
+                                ${item.wholesalePackages}
+                                <div class="revenue">Mapato ya bei ya jumla: TSh ${item.wholesaleRevenue.toLocaleString()}</div>
+                                <div class="profit">Faida ya rejareja: TSh ${item.retailProfit.toLocaleString()}</div>
+                                <div class="profit">Faida ya bei ya jumla: TSh ${item.wholesaleProfit.toLocaleString()}</div>
+                            </div>
+                        `;
+                    });
+                    historyItems.innerHTML = outputHTML;
+                }
+            } else if (section === 'round') {
+                const dailyHistory = JSON.parse(localStorage.getItem('roundDailyHistory')) || {};
+                const historyItems = document.getElementById('round-history-items');
+                
+                const filteredHistory = filterDate ? 
+                    { [filterDate]: dailyHistory[filterDate] } : 
+                    dailyHistory;
+                
+                if (Object.keys(filteredHistory).length === 0 || !filteredHistory[filterDate]) {
+                    historyItems.innerHTML = '<div>Hakuna historia kwa siku hii.</div>';
+                    document.getElementById('profit-chart').style.display = 'none';
+                } else {
+                    let outputHTML = '';
+                    let totalPiecesAll = 0;
+                    let totalRetailValueAll = 0;
+                    let totalWholesaleRevenueAll = 0;
+                    let totalWholesaleProfitAll = 0;
+                    let totalLossAll = 0;
+                    let totalCustomerProfitAll = 0;
+                    
+                    Object.values(filteredHistory).forEach((day, dayIndex) => {
+                        outputHTML += `
+                            <div class="history-item">
+                                <button class="delete-btn" onclick="deleteHistoryItem(${dayIndex}, 'round')"><i class="fas fa-trash-alt"></i> Futa Siku</button>
+                                <strong>Siku: ${day.date}</strong>
+                                <h3>Awamu za Siku:</h3>
+                        `;
+                        let dayTotalPieces = 0;
+                        let dayRetailValue = 0;
+                        let dayWholesaleRevenue = 0;
+                        let dayWholesaleProfit = 0;
+                        let dayLoss = 0;
+                        let dayCustomerProfit = 0;
+                        
+                        (day.phases || []).forEach((phase, phaseIndex) => {
+                            const metrics = calculateWholesaleMetrics(phase.totalPieces || 0);
+                            dayTotalPieces += phase.totalPieces || 0;
+                            dayRetailValue += (phase.totalPieces || 0) * 100;
+                            dayWholesaleRevenue += metrics.wholesaleRevenue;
+                            dayWholesaleProfit += metrics.wholesaleProfit;
+                            dayLoss += metrics.loss;
+                            dayCustomerProfit += metrics.customerProfit;
+                            
+                            const sellHistory = JSON.parse(localStorage.getItem('sellHistory')) || [];
+                            const averageCostPerPiece = sellHistory.length > 0 ? 
+                                sellHistory[sellHistory.length - 1].averageCostPerPiece : 0;
+                            
+                            outputHTML += `
+                                <div>
+                                    <strong>Awamu ${phaseIndex + 1} (Saa: ${phase.timestamp}):</strong>
+                                    ${(phase.rounds || []).map((round, roundIndex) => `
+                                        <div class="package">
+                                            <span>Round ${roundIndex + 1}: ${round.piecesPerRound} × 2:</span>
+                                            <span>Vipande ${round.totalPieces} (TSh ${round.totalValue.toLocaleString()})</span>
+                                        </div>
+                                    `).join('')}
+                                    <div class="total">Jumla ya vipande: ${phase.totalPieces || 0}</div>
+                                    <div class="revenue">Thamani ya rejareja: TSh ${((phase.totalPieces || 0) * 100).toLocaleString()}</div>
+                                    ${averageCostPerPiece > 0 ? `
+                                        <div class="average-cost">Gharama ya wastani ya awamu: TSh ${((phase.totalPieces || 0) * averageCostPerPiece).toLocaleString()}</div>
+                                        <div class="profit">Faida ya rejareja ya awamu: TSh ${(((phase.totalPieces || 0) * 100) - (phase.totalPieces || 0) * averageCostPerPiece).toLocaleString()}</div>
+                                    ` : ''}
+                                    <h3>Mahesabu ya Bei ya Jumla:</h3>
+                                    ${metrics.wholesalePackages}
+                                    <div class="revenue">Pesa za mteja (Bei ya Jumla): TSh ${metrics.wholesaleRevenue.toLocaleString()}</div>
+                                    <div class="profit">Faida yako (Bei ya Jumla): TSh ${metrics.wholesaleProfit.toLocaleString()}</div>
+                                    <div class="loss">Hasara yako (Bei ya Jumla): TSh ${metrics.loss.toLocaleString()}</div>
+                                    <div class="profit">Faida ya mteja (Rejareja): TSh ${metrics.customerProfit.toLocaleString()}</div>
+                                    ${metrics.wholesaleProfit < 0 ? `
+                                        <div class="loss">Umepata hasara ya TSh ${Math.abs(metrics.wholesaleProfit).toLocaleString()}. Fikiria kuuza kwa bei ya kawaida (TSh 100 kipande).</div>
+                                    ` : metrics.wholesaleProfit < metrics.customerProfit ? `
+                                        <div class="loss">Faida yako ni ndogo sana (TSh ${metrics.wholesaleProfit.toLocaleString()}). Uza kwa bei ya kawaida (TSh 100 kipande) ili upate faida zaidi.</div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        });
+                        
+                        totalPiecesAll += dayTotalPieces;
+                        totalRetailValueAll += dayRetailValue;
+                        totalWholesaleRevenueAll += dayWholesaleRevenue;
+                        totalWholesaleProfitAll += dayWholesaleProfit;
+                        totalLossAll += dayLoss;
+                        totalCustomerProfitAll += dayCustomerProfit;
+                        
+                        outputHTML += `
+                            <h3>Matokeo ya Siku:</h3>
+                            <div class="total">Jumla ya vipande: ${dayTotalPieces}</div>
+                            <div class="revenue">Thamani ya rejareja: TSh ${dayRetailValue.toLocaleString()}</div>
+                            <div class="revenue">Pesa za mteja (Bei ya Jumla): TSh ${dayWholesaleRevenue.toLocaleString()}</div>
+                            <div class="profit">Faida yako (Bei ya Jumla): TSh ${dayWholesaleProfit.toLocaleString()}</div>
+                            <div class="loss">Hasara yako (Bei ya Jumla): TSh ${dayLoss.toLocaleString()}</div>
+                            <div class="profit">Faida ya mteja (Rejareja): TSh ${dayCustomerProfit.toLocaleString()}</div>
+                            ${dayWholesaleProfit < 0 ? `
+                                <div class="loss">Umepata hasara ya TSh ${Math.abs(dayWholesaleProfit).toLocaleString()}. Fikiria kuuza kwa bei ya kawaida (TSh 100 kipande).</div>
+                            ` : dayWholesaleProfit < dayCustomerProfit ? `
+                                <div class="loss">Faida yako ni ndogo sana (TSh ${dayWholesaleProfit.toLocaleString()}). Uza kwa bei ya kawaida (TSh 100 kipande) ili upate faida zaidi.</div>
+                            ` : ''}
+                        </div>
+                        `;
+                    });
+                    
+                    outputHTML += `
+                        <h3>Matokeo ya Jumla (Siku Zote Zilizochujwa):</h3>
+                        <div class="total">Jumla ya vipande: ${totalPiecesAll}</div>
+                        <div class="revenue">Thamani ya rejareja: TSh ${totalRetailValueAll.toLocaleString()}</div>
+                        <div class="revenue">Pesa za mteja (Bei ya Jumla): TSh ${totalWholesaleRevenueAll.toLocaleString()}</div>
+                        <div class="profit">Faida yako (Bei ya Jumla): TSh ${totalWholesaleProfitAll.toLocaleString()}</div>
+                        <div class="loss">Hasara yako (Bei ya Jumla): TSh ${totalLossAll.toLocaleString()}</div>
+                        <div class="profit">Faida ya mteja (Rejareja): TSh ${totalCustomerProfitAll.toLocaleString()}</div>
+                        ${totalWholesaleProfitAll < 0 ? `
+                            <div class="loss">Umepata hasara ya TSh ${Math.abs(totalWholesaleProfitAll).toLocaleString()}. Fikiria kuuza kwa bei ya kawaida (TSh 100 kipande).</div>
+                        ` : totalWholesaleProfitAll < totalCustomerProfitAll ? `
+                            <div class="loss">Faida yako ni ndogo sana (TSh ${totalWholesaleProfitAll.toLocaleString()}). Uza kwa bei ya kawaida (TSh 100 kipande) ili upate faida zaidi.</div>
+                        ` : ''}
+                    `;
+                    
+                    historyItems.innerHTML = outputHTML;
+                    document.getElementById('profit-chart').style.display = 'block';
+                    drawProfitChart(totalPiecesAll, totalRetailValueAll, totalWholesaleProfitAll, totalLossAll);
+                }
+            }
+        }
+
+        // Function to delete single history item
+        function deleteHistoryItem(index, section) {
+            if (confirm('Je, una uhakika unataka kufuta rekodi hii?')) {
+                if (section === 'sell') {
+                    let history = JSON.parse(localStorage.getItem('sellHistory')) || [];
+                    history.splice(index, 1);
+                    localStorage.setItem('sellHistory', JSON.stringify(history));
+                } else if (section === 'round') {
+                    let dailyHistory = JSON.parse(localStorage.getItem('roundDailyHistory')) || {};
+                    const dates = Object.keys(dailyHistory);
+                    if (dates[index]) {
+                        delete dailyHistory[dates[index]];
+                        localStorage.setItem('roundDailyHistory', JSON.stringify(dailyHistory));
+                    }
+                }
+                alert("Rekodi imefutwa!");
+                toggleHistory(section);
+            }
+        }
+
+        // Function to export history as CSV
+        function exportHistory(section) {
+            if (section === 'sell') {
+                const history = JSON.parse(localStorage.getItem('sellHistory')) || [];
+                if (history.length === 0) {
+                    alert('Hakuna historia ya kusafirisha.');
+                    return;
+                }
+                
+                let csvContent = 'data:text/csv;charset=utf-8,';
+                csvContent += 'Tarehe,Sukari (kg),Gharama Sukari (TSh),Mkaa (TSh),Ufuta (kg),Gharama Ufuta (TSh),Jumla Gharama (TSh),Gharama Wastani/Kipande (TSh),Vipande,Thamani Rejareja (TSh),Mapato Bei ya Jumla (TSh),Faida Rejareja (TSh),Faida Bei ya Jumla (TSh)\n';
+                
+                history.forEach(item => {
+                    const row = [
+                        `"${item.timestamp}"`,
+                        item.sugar,
+                        item.sugarCost,
+                        item.charcoal,
+                        item.oil,
+                        item.oilCost,
+                        item.totalCost,
+                        item.averageCostPerPiece,
+                        item.totalPieces,
+                        item.retailValue,
+                        item.wholesaleRevenue,
+                        item.retailProfit,
+                        item.wholesaleProfit
+                    ].join(',');
+                    csvContent += row + '\n';
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', 'historia_mahesabu.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else if (section === 'round') {
+                const dailyHistory = JSON.parse(localStorage.getItem('roundDailyHistory')) || {};
+                if (Object.keys(dailyHistory).length === 0) {
+                    alert('Hakuna historia ya kusafirisha.');
+                    return;
+                }
+                
+                let csvContent = 'data:text/csv;charset=utf-8,';
+                csvContent += 'Siku,Awamu,Saa,Round,Vipande kwa Round,Jumla Vipande,Thamani (TSh),Jumla Vipande Awamu,Jumla Thamani Awamu (TSh),Thamani Rejareja (TSh),Pesa Mteja (TSh),Faida Yako (TSh),Hasara Yako (TSh),Faida Mteja (TSh)\n';
+                
+                Object.values(dailyHistory).forEach(day => {
+                    (day.phases || []).forEach((phase, phaseIndex) => {
+                        const metrics = calculateWholesaleMetrics(phase.totalPieces || 0);
+                        (phase.rounds || []).forEach((round, roundIndex) => {
+                            const row = [
+                                `"${day.date}"`,
+                                phaseIndex + 1,
+                                `"${phase.timestamp}"`,
+                                roundIndex + 1,
+                                round.piecesPerRound,
+                                round.totalPieces,
+                                round.totalValue,
+                                phase.totalPieces || 0,
+                                phase.totalValue || 0,
+                                (phase.totalPieces || 0) * 100,
+                                metrics.wholesaleRevenue,
+                                metrics.wholesaleProfit,
+                                metrics.loss,
+                                metrics.customerProfit
+                            ].join(',');
+                            csvContent += row + '\n';
+                        });
+                    });
+                });
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', 'historia_rounds.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+
+        // Function to export debtors as CSV
+        function exportDebtors() {
+            const debtors = JSON.parse(localStorage.getItem('debtors')) || [];
+            if (debtors.length === 0) {
+                alert('Hakuna wanadaiwa wa kusafirisha.');
+                return;
+            }
+            
+            let csvContent = 'data:text/csv;charset=utf-8,';
+            csvContent += 'Jina,Kiasi (TSh),Tarehe\n';
+            
+            debtors.forEach(debtor => {
+                const row = [
+                    `"${debtor.name}"`,
+                    debtor.amount,
+                    `"${debtor.timestamp}"`
+                ].join(',');
+                csvContent += row + '\n';
+            });
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'wanadaiwa.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Function to toggle history
+        function toggleHistory(section) {
+            const historyDiv = document.getElementById(`${section}-history`);
+            const isVisible = historyDiv.style.display === 'block';
+            historyDiv.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                filterHistory(section);
+            }
+        }
+    </script>
+</body>
+</html>
+
